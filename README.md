@@ -1,2 +1,3 @@
 # discord-ts-example
-typescript discord bot example using eris.
+
+typescript discord bot example using eris. (updated)
