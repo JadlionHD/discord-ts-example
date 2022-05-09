@@ -1,7 +1,7 @@
 import { IClient } from "./structures/Client";
 import "dotenv/config";
-import { clientOptions } from "./config"
+import config from "./config";
 
-const client = new IClient(process.env.DISCORD_TOKEN, clientOptions);
+const client = new IClient(process.env.DISCORD_TOKEN, config.clientOptions);
 
-client.connect();
+client.start();

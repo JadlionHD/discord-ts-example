@@ -1,27 +1,32 @@
-import { ClientOptions } from "eris";
+import { ConfigType } from "./types";
 
-export const clientOptions: ClientOptions = {
-	maxShards: 'auto',
-	messageLimit: 0,
-	getAllUsers: false,
-	allowedMentions: {
-		everyone: false,
-		roles: true,
-		users: true
-	},
-	disableEvents: {
-		TYPING_START: true,
-		VOICE_STATE_UPDATE: true,
-	}
-}
+const config: ConfigType = {
+  botOptions: {
+    prefix: "hi!",
+    ownerID: ["421307985827201024"],
+    colors: {
+      error: 0xff0000,
+      green: 0x00ff46,
+      success: 0xc0c0c0,
+      warning: 0xffd100
+    },
+    devMode: true
+  },
+  clientOptions: {
+    maxShards: "auto",
+    messageLimit: 0,
+    getAllUsers: true,
+    allowedMentions: {
+      everyone: false,
+      roles: true,
+      users: true
+    },
+    disableEvents: {
+      TYPING_START: true,
+      VOICE_STATE_UPDATE: true
+    },
+    intents: ["guildMembers", "guildMessages", "guildEmojis", "guilds"]
+  }
+};
 
-export const config = {
-	"prefix" : "hi!",
-	"ownerID": ["421307985827201024", "540560193277132800", "494219204610883594"],
-	"colors": {
-		"error": 0xFF0000,
-		"green": 0x00FF46,
-		"success": 0xC0C0C0,
-		"warning": 0xFFD100
-	}
-}
+export default config;

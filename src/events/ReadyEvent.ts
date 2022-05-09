@@ -1,8 +1,12 @@
 import { IClient } from "../structures/Client";
+import IEvent from "../structures/Event";
 
-module.exports = {
-	name: "ready",
-	run: async function(client: IClient): Promise<any> {
-		console.log(`${client.user.username} Ready!`)
-	}
+export default class ReadyEvent extends IEvent {
+  constructor(bot: IClient) {
+    super(bot);
+    this.name = "ready";
+  }
+  public run(bot: IClient) {
+    console.log(`${bot.client.user.username} Ready!`);
+  }
 }

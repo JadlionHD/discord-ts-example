@@ -1,44 +1,42 @@
-import { Client, ClientOptions, Collection } from "eris";
+import { Client, ClientOptions, Collection, Constants } from "eris";
 import { readdir, readdirSync } from "fs";
+import Config from "../config";
+import { ConfigType, ICommandType } from "../types";
 
-export class IClient extends Client {
+export class IClient {
+  public readonly config: ConfigType;
+  public commands: Map<string, ICommandType>;
+  public client: Client;
+  public token: string;
+  constructor(token: string, options?: ClientOptions) {
+    this.config = Config;
+    this.commands = new Map();
+    this.client = new Client(token, this.config.clientOptions);
+  }
 
-	public readonly config;
-	public commands;
-	public aliases;
-	constructor(token: string, options?: ClientOptions) {
-		super(token, options);
+  public start(): void {
+    console.log("Starting bot...");
+    this._loadCommands();
+    this._loadEvents();
+    this.client.connect();
+    setTimeout(() => {
+      require("./SlashHandle").run(this);
+    }, 5 * 1000);
+  }
+  private _loadCommands(): void {
+    readdirSync(`${__dirname}/../commands`).forEach((fileName) => {
+      let file = require(`../commands/${fileName.replace(".js", "")}`);
+      let initFile = new file.default();
+      this.commands.set(initFile.commandOpts(Constants).name, initFile);
+    });
+  }
 
-		this.config = require("../config").config;
-		this.commands = new Map();
-		this.aliases = new Map();
-		this._loadEvents(this);
-		this._loadCommands();
-	}
-
-	private _loadCommands(): void {
-		readdirSync("./dist/commands/").forEach(dir => {
-			const commands = readdirSync(`./dist/commands/${dir}`).filter(file => file.endsWith(".js"));
-			for(let file of commands) {
-				//let nameDir = file.replace(".js", "").toLowerCase();
-				
-				let cmd = require(`../commands/${dir}/${file.replace(".js", "").toLowerCase()}`);
-				let name = cmd.config.name;
-				this.commands.set(name, cmd);
-				if(cmd.config.aliases) {
-					for(const alias of cmd.config.aliases) {
-						this.aliases.set(alias, name);
-					}
-				}
-			}
-		})
-	}
-
-	private _loadEvents(client: Client): void {
-		const read = readdirSync("./dist/events")
-		for(const event of read) {
-			const file = require(`../events/${event}`)
-			client.on(file.name, (...args) => file.run(client, ...args));
-		}
-	}
+  private _loadEvents(): void {
+    const read = readdirSync(`${__dirname}/../events`);
+    for (const event of read) {
+      let file = require(`../events/${event.replace(".js", "")}`);
+      let initFile = new file.default();
+      this.client.on(initFile.name, (...args) => initFile.run(this, ...args));
+    }
+  }
 }
