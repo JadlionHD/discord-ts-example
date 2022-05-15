@@ -1,5 +1,6 @@
-import { AutocompleteInteraction, Client, ClientOptions, CommandInteraction, Constants, MessageInteraction } from "eris";
+import { ApplicationCommandOptions, ApplicationCommandStructure, Client, ClientOptions, Constants } from "eris";
 import Config from "../config";
+import Erirs from "eris";
 
 export interface IClientType {
   config: object;
@@ -11,15 +12,16 @@ export interface IClientType {
   _loadEvents: () => void;
 }
 
+export type ICommandInteraction =
+  | Eris.CommandInteraction
+  | Eris.PingInteraction
+  | Eris.ComponentInteraction
+  | Eris.AutocompleteInteraction
+  | Eris.UnknownInteraction;
+
 export interface ICommandType {
   commandOpts(constant: Constants): ICommandOpts;
-  run(bot: IClient, interaction: CommandInteraction): void;
-}
-
-export interface ICommandOpts {
-  name: string;
-  description: string;
-  type: number | any;
+  run(bot: IClient, interaction: ICommandInteraction): void;
 }
 
 export interface ConfigType {

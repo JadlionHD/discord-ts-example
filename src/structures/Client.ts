@@ -7,11 +7,12 @@ export class IClient {
   public readonly config: ConfigType;
   public commands: Map<string, ICommandType>;
   public client: Client;
-  public token: string;
+  public token: string | undefined;
   constructor(token: string, options?: ClientOptions) {
     this.config = Config;
     this.commands = new Map();
     this.client = new Client(token, this.config.clientOptions);
+    if (!token) throw new Error("Token must be required!");
   }
 
   public start(): void {

@@ -16,11 +16,7 @@ export function run(bot: IClient): void {
         //     bot.commands.get(cmd.name).commandOpts(Constants)
         //   );
         // }
-
-        bot.client.createGuildCommand(
-          guildID,
-          bot.commands.get(cmdOpts.name).commandOpts(Constants) // sementara ngecreate semua command dlu
-        );
+        bot.client.createGuildCommand(guildID, bot.commands.get(cmdOpts.name)?.commandOpts(Constants));
       });
     });
   }
