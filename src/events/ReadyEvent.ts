@@ -8,5 +8,6 @@ export default class ReadyEvent extends IEvent {
   }
   public run(bot: IClient) {
     console.log(`${bot.client.user.username} Ready!`);
+    bot.client.editStatus("online", { name: "wow", type: 0 });
   }
 }

@@ -8,6 +8,6 @@ export default class InteractionEvent extends IEvent {
     this.name = "messageCreate";
   }
   public run(bot: IClient, msg: Message) {
-    console.log("Received Message: ", msg);
+    console.log("Received Message: ", msg.id);
   }
 }

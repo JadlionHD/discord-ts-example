@@ -16,7 +16,7 @@ export default class PingCommand extends ICommand {
   }
   public run(bot: IClient, interaction: ICommandInteraction): void {
     interaction.createMessage({
-      content: "Ping"
+      content: `Ping \`${bot.client.shards.get(0)?.latency}ms\``
     });
   }
 }
