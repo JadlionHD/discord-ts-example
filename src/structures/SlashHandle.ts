@@ -5,18 +5,15 @@ export function run(bot: IClient): void {
   let guildID: string = "617041217951236291";
   if (bot.config.botOptions.devMode) {
     bot.client.getGuildCommands(guildID).then((res) => {
-      bot.commands.forEach((cmd) => {
-        let cmdOpts = cmd.commandOpts(Constants);
-        let slashCmd = res.find((f) => f.name === cmdOpts.name);
-        console.log(slashCmd);
-        // gk bs bikin command baru untuk sementaraW
-        // if (slashCmd !== undefined) {
-        //   bot.client.createGuildCommand(
-        //     guildnya,
-        //     bot.commands.get(cmd.name).commandOpts(Constants)
-        //   );
-        // }
-        bot.client.createGuildCommand(guildID, bot.commands.get(cmdOpts.name)?.commandOpts(Constants));
+      res.forEach((r) => {
+        if (bot.commands.has(r.name)) {
+          let cmd = bot.commands.get(r.name);
+          console.log(`[UPDATE] Updating ${r.name}`);
+          bot.client.createGuildCommand(guildID, cmd?.commandOpts(Constants));
+        } else {
+          console.log(`[WARNING] Deleting unused command: ${r.name}`);
+          bot.client.deleteGuildCommand(guildID, r.id);
+        }
       });
     });
   }
