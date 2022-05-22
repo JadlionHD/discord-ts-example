@@ -20,22 +20,22 @@ export class IClient {
     this._loadCommands();
     this._loadEvents();
     this.client.connect();
-    setTimeout(() => {
-      require("./SlashHandle").run(this);
+    setTimeout(async () => {
+      (await import("./SlashHandle")).run(this);
     }, 5 * 1000);
   }
   private _loadCommands(): void {
-    readdirSync(`${__dirname}/../commands`).forEach((fileName) => {
-      let file = require(`../commands/${fileName.replace(".js", "")}`);
+    readdirSync(`${__dirname}/../commands`).forEach(async (fileName) => {
+      let file = await import(`../commands/${fileName.replace(".js", "")}`);
       let initFile = new file.default();
       this.commands.set(initFile.commandOpts(Constants).name, initFile);
     });
   }
 
-  private _loadEvents(): void {
+  private async _loadEvents(): Promise<void> {
     const read = readdirSync(`${__dirname}/../events`);
     for (const event of read) {
-      let file = require(`../events/${event.replace(".js", "")}`);
+      let file = await import(`../events/${event.replace(".js", "")}`);
       let initFile = new file.default();
       this.client.on(initFile.name, (...args) => initFile.run(this, ...args));
     }
