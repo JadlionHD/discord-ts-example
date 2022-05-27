@@ -6,17 +6,13 @@ export function run(bot: IClient): void {
   if (bot.config.botOptions.devMode) {
     // Creating command
     bot.commands.forEach((cmd) => {
-      bot.client.createGuildCommand(guildID, cmd.commandOpts(Constants));
+      bot.client.createGuildCommand(guildID, cmd.commandOpts(Constants)).then((r) => console.log(`[UPDATE] Updating "${r.name}" command`));
     });
 
     // Updating command
     bot.client.getGuildCommands(guildID).then((res) => {
       res.forEach((r) => {
-        if (bot.commands.has(r.name)) {
-          let cmd = bot.commands.get(r.name);
-          console.log(`[UPDATE] Updating ${r.name}`);
-          bot.client.createGuildCommand(guildID, cmd?.commandOpts(Constants));
-        } else {
+        if (!bot.commands.has(r.name)) {
           console.log(`[WARNING] Deleting unused command: ${r.name}`);
           bot.client.deleteGuildCommand(guildID, r.id);
         }
